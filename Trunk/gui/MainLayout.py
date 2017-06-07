@@ -22,44 +22,29 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(842, 590)
-        self.centralwidget = QtGui.QWidget(MainWindow)
-        self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
-        self.horizontalLayout = QtGui.QHBoxLayout(self.centralwidget)
+class Ui_MainLayout(object):
+    def setupUi(self, MainLayout):
+        MainLayout.setObjectName(_fromUtf8("MainLayout"))
+        MainLayout.resize(400, 300)
+        self.horizontalLayout = QtGui.QHBoxLayout(MainLayout)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.pb_newDrink = QtGui.QPushButton(self.centralwidget)
+        self.pb_newDrink = QtGui.QPushButton(MainLayout)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.pb_newDrink.sizePolicy().hasHeightForWidth())
         self.pb_newDrink.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
-        font.setFamily(_fromUtf8("Rainbow Bridge Personal Use"))
-        font.setPointSize(26)
+        font.setFamily(_fromUtf8("Single Sleeve"))
+        font.setPointSize(36)
         self.pb_newDrink.setFont(font)
         self.pb_newDrink.setObjectName(_fromUtf8("pb_newDrink"))
         self.horizontalLayout.addWidget(self.pb_newDrink)
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.menuBar = QtGui.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 842, 26))
-        self.menuBar.setObjectName(_fromUtf8("menuBar"))
-        self.menuAdmin = QtGui.QMenu(self.menuBar)
-        self.menuAdmin.setObjectName(_fromUtf8("menuAdmin"))
-        MainWindow.setMenuBar(self.menuBar)
-        self.actionEnter_Admin_Mode = QtGui.QAction(MainWindow)
-        self.actionEnter_Admin_Mode.setObjectName(_fromUtf8("actionEnter_Admin_Mode"))
-        self.menuAdmin.addAction(self.actionEnter_Admin_Mode)
-        self.menuBar.addAction(self.menuAdmin.menuAction())
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.retranslateUi(MainLayout)
+        QtCore.QMetaObject.connectSlotsByName(MainLayout)
 
-    def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "CubaTronik", None))
-        self.pb_newDrink.setText(_translate("MainWindow", "New drink", None))
-        self.menuAdmin.setTitle(_translate("MainWindow", "Admin", None))
-        self.actionEnter_Admin_Mode.setText(_translate("MainWindow", "Enter Admin Mode", None))
+    def retranslateUi(self, MainLayout):
+        MainLayout.setWindowTitle(_translate("MainLayout", "Form", None))
+        self.pb_newDrink.setText(_translate("MainLayout", "New Drink", None))
 
