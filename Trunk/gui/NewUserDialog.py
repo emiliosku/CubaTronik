@@ -22,13 +22,14 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName(_fromUtf8("Dialog"))
-        Dialog.resize(717, 232)
-        self.verticalLayout = QtGui.QVBoxLayout(Dialog)
+class Ui_NewUserDialog(object):
+    def setupUi(self, NewUserDialog):
+        NewUserDialog.setObjectName(_fromUtf8("NewUserDialog"))
+        NewUserDialog.resize(717, 232)
+        NewUserDialog.setModal(True)
+        self.verticalLayout = QtGui.QVBoxLayout(NewUserDialog)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.groupBox = QtGui.QGroupBox(Dialog)
+        self.groupBox = QtGui.QGroupBox(NewUserDialog)
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Single Sleeve"))
         font.setPointSize(18)
@@ -45,7 +46,7 @@ class Ui_Dialog(object):
         self.label_profilePicture.setFont(font)
         self.label_profilePicture.setObjectName(_fromUtf8("label_profilePicture"))
         self.verticalLayout_3.addWidget(self.label_profilePicture)
-        self.list_profilePicture = QtGui.QListView(self.groupBox)
+        self.list_profilePicture = QtGui.QListWidget(self.groupBox)
         self.list_profilePicture.setObjectName(_fromUtf8("list_profilePicture"))
         self.verticalLayout_3.addWidget(self.list_profilePicture)
         self.horizontalLayout.addLayout(self.verticalLayout_3)
@@ -85,6 +86,7 @@ class Ui_Dialog(object):
         font.setPointSize(14)
         font.setKerning(False)
         self.pb_cancel.setFont(font)
+        self.pb_cancel.setAutoDefault(False)
         self.pb_cancel.setObjectName(_fromUtf8("pb_cancel"))
         self.horizontalLayout_2.addWidget(self.pb_cancel)
         self.pb_create = QtGui.QPushButton(self.groupBox)
@@ -102,14 +104,14 @@ class Ui_Dialog(object):
         self.horizontalLayout.addLayout(self.verticalLayout_2)
         self.verticalLayout.addWidget(self.groupBox)
 
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi(NewUserDialog)
+        QtCore.QMetaObject.connectSlotsByName(NewUserDialog)
 
-    def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog", None))
-        self.groupBox.setTitle(_translate("Dialog", "New User", None))
-        self.label_profilePicture.setText(_translate("Dialog", "Profile picture", None))
-        self.label_userName.setText(_translate("Dialog", "User name", None))
-        self.pb_cancel.setText(_translate("Dialog", "Cancel", None))
-        self.pb_create.setText(_translate("Dialog", "Create", None))
+    def retranslateUi(self, NewUserDialog):
+        NewUserDialog.setWindowTitle(_translate("NewUserDialog", "Dialog", None))
+        self.groupBox.setTitle(_translate("NewUserDialog", "New User", None))
+        self.label_profilePicture.setText(_translate("NewUserDialog", "Profile picture", None))
+        self.label_userName.setText(_translate("NewUserDialog", "User name", None))
+        self.pb_cancel.setText(_translate("NewUserDialog", "Cancel", None))
+        self.pb_create.setText(_translate("NewUserDialog", "Create", None))
 
