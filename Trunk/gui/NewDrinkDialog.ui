@@ -9,12 +9,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>450</width>
+    <height>250</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>New Drink</string>
+   <string>Choose a player</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -45,7 +45,14 @@
       </widget>
      </item>
      <item>
-      <widget class="QListWidget" name="list_usersAvailable"/>
+      <widget class="QListWidget" name="list_usersAvailable">
+       <property name="font">
+        <font>
+         <family>Single Sleeve</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

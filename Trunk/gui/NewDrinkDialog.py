@@ -26,7 +26,7 @@ class Ui_userSelectionDialog(object):
     def setupUi(self, userSelectionDialog):
         userSelectionDialog.setObjectName(_fromUtf8("userSelectionDialog"))
         userSelectionDialog.setEnabled(True)
-        userSelectionDialog.resize(400, 300)
+        userSelectionDialog.resize(450, 250)
         userSelectionDialog.setModal(True)
         self.horizontalLayout = QtGui.QHBoxLayout(userSelectionDialog)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
@@ -46,6 +46,10 @@ class Ui_userSelectionDialog(object):
         self.pb_guest.setObjectName(_fromUtf8("pb_guest"))
         self.verticalLayout.addWidget(self.pb_guest)
         self.list_usersAvailable = QtGui.QListWidget(userSelectionDialog)
+        font = QtGui.QFont()
+        font.setFamily(_fromUtf8("Single Sleeve"))
+        font.setPointSize(24)
+        self.list_usersAvailable.setFont(font)
         self.list_usersAvailable.setObjectName(_fromUtf8("list_usersAvailable"))
         self.verticalLayout.addWidget(self.list_usersAvailable)
         self.horizontalLayout.addLayout(self.verticalLayout)
@@ -75,7 +79,7 @@ class Ui_userSelectionDialog(object):
         QtCore.QMetaObject.connectSlotsByName(userSelectionDialog)
 
     def retranslateUi(self, userSelectionDialog):
-        userSelectionDialog.setWindowTitle(_translate("userSelectionDialog", "New Drink", None))
+        userSelectionDialog.setWindowTitle(_translate("userSelectionDialog", "Choose a player", None))
         self.pb_guest.setText(_translate("userSelectionDialog", "Guest", None))
         self.pb_newUser.setText(_translate("userSelectionDialog", "New", None))
         self.pb_cancel.setText(_translate("userSelectionDialog", "Cancel", None))
