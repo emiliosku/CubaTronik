@@ -35,6 +35,3 @@ class loadData():
             return users
         except:
             logging.warning("Problem while loading users. Feature disabled")
-
-
-    # def loadInfo

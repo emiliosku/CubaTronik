@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>userSelectionDialog</class>
  <widget class="QDialog" name="userSelectionDialog">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="enabled">
    <bool>true</bool>
   </property>
@@ -79,7 +82,7 @@
        <property name="font">
         <font>
          <family>Single Sleeve</family>
-         <pointsize>22</pointsize>
+         <pointsize>24</pointsize>
         </font>
        </property>
        <property name="text">
@@ -108,7 +111,7 @@
        <property name="font">
         <font>
          <family>Single Sleeve</family>
-         <pointsize>12</pointsize>
+         <pointsize>14</pointsize>
         </font>
        </property>
        <property name="text">

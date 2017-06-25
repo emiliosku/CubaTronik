@@ -93,7 +93,7 @@
             <widget class="QLineEdit" name="txt_newUserName">
              <property name="font">
               <font>
-               <pointsize>14</pointsize>
+               <pointsize>16</pointsize>
               </font>
              </property>
             </widget>
@@ -119,8 +119,12 @@
             <widget class="QLineEdit" name="txt_newUserPassword">
              <property name="font">
               <font>
-               <pointsize>14</pointsize>
+               <family>Verdana</family>
+               <pointsize>16</pointsize>
               </font>
+             </property>
+             <property name="echoMode">
+              <enum>QLineEdit::Password</enum>
              </property>
             </widget>
            </item>
@@ -140,8 +144,12 @@ Password</string>
             <widget class="QLineEdit" name="txt_newUserRepeatPassword">
              <property name="font">
               <font>
-               <pointsize>14</pointsize>
+               <family>Verdana</family>
+               <pointsize>16</pointsize>
               </font>
+             </property>
+             <property name="echoMode">
+              <enum>QLineEdit::Password</enum>
              </property>
             </widget>
            </item>

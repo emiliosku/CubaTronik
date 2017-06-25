@@ -25,6 +25,7 @@ except AttributeError:
 class Ui_userSelectionDialog(object):
     def setupUi(self, userSelectionDialog):
         userSelectionDialog.setObjectName(_fromUtf8("userSelectionDialog"))
+        userSelectionDialog.setWindowModality(QtCore.Qt.NonModal)
         userSelectionDialog.setEnabled(True)
         userSelectionDialog.resize(450, 250)
         userSelectionDialog.setModal(True)
@@ -60,7 +61,7 @@ class Ui_userSelectionDialog(object):
         self.pb_newUser = QtGui.QPushButton(userSelectionDialog)
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Single Sleeve"))
-        font.setPointSize(22)
+        font.setPointSize(24)
         self.pb_newUser.setFont(font)
         self.pb_newUser.setObjectName(_fromUtf8("pb_newUser"))
         self.verticalLayout_2.addWidget(self.pb_newUser)
@@ -69,7 +70,7 @@ class Ui_userSelectionDialog(object):
         self.pb_cancel = QtGui.QPushButton(userSelectionDialog)
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Single Sleeve"))
-        font.setPointSize(12)
+        font.setPointSize(14)
         self.pb_cancel.setFont(font)
         self.pb_cancel.setObjectName(_fromUtf8("pb_cancel"))
         self.verticalLayout_2.addWidget(self.pb_cancel)
