@@ -9,6 +9,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from gui.MenuOrDiy import *
 from gui.SignInPassword import *
+from gui.Diy import *
 
 class MenuOrDiy(QWidget,Ui_MenuOrDiy):
     def __init__(self, parent = None):
@@ -22,6 +23,8 @@ class MenuOrDiy(QWidget,Ui_MenuOrDiy):
         self.pb_diy.setIconSize(QSize(bigIconSize, bigIconSize))
         self.pb_menu.setIcon(QIcon(os.path.join("img", "list-icon.png")))
         self.pb_menu.setIconSize(QSize(bigIconSize, bigIconSize))
+        self.pb_back.setIcon(QIcon(os.path.join("img", "arrow-back-icon.png")))
+        self.pb_back.setIconSize(QSize(bigIconSize, bigIconSize))
 
 
 class SignInPassword(QDialog, Ui_TypePassword):
@@ -30,6 +33,12 @@ class SignInPassword(QDialog, Ui_TypePassword):
         self.setupUi(self)
 
         QObject.connect(self.pb_cancel, SIGNAL("clicked()"), self.close)
+
+
+class Diy(QWidget, Ui_DiyScreen):
+    def __init__(self, parent = None):
+        super(Diy, self).__init__(parent)
+        self.setupUi(self)
 
 
 

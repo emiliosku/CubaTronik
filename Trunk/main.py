@@ -36,6 +36,7 @@ class MainWindow(QMainWindow):
         self.myThread.start()
         self.data = loadData()
         self.password = SignInPassword()
+        self.diy = Diy()
 
         """
             Menu Bar Configuration.
@@ -67,17 +68,27 @@ class MainWindow(QMainWindow):
         QObject.connect(self.newDrinkDialog.list_usersAvailable, SIGNAL("itemClicked(QListWidgetItem*)"),
                         self.passwordDialog)
         QObject.connect(self.password.pb_signIn, SIGNAL("clicked()"), self.checkPass)
+        QObject.connect(self.second.pb_back, SIGNAL("clicked()"), self.firstMenu)
+        QObject.connect(self.second.pb_diy, SIGNAL("clicked()"), self.diyMenu)
 
         self.central.addWidget(self.first)
+        self.central.addWidget(self.second)
+        self.central.addWidget(self.diy)
 
     def secondMenu(self):
-        self.central.addWidget(self.second)
         self.central.setCurrentWidget(self.second)
         self.second.label_userName.setText(self.currentUser)
-        self.newDrinkDialog.close()
+
+    def diyMenu(self):
+        self.central.setCurrentWidget(self.diy)
+
+    def firstMenu(self):
+        self.central.setCurrentWidget(self.first)
 
     def passwordDialog(self, userName):
-        lastSignIn = ""
+        self.newDrinkDialog.list_usersAvailable.setItemSelected(userName, False)
+        self.newDrinkDialog.list_usersAvailable.setCurrentRow(0, QItemSelectionModel.Deselect)
+        result = False
         self.currentUser = str(userName.text())
         self.directory = "%s\\log\\%s.txt" % (os.getcwd(), self.currentUser)
         readData = open(self.directory, "r")
@@ -92,9 +103,10 @@ class MainWindow(QMainWindow):
                 date = time.localtime(time.time())
                 currentTime = [date[7], (date[0] % 100), date[3], date[4], date[5]]
                 result = self.checkEightHours(currentTime, lastSignIn)
-        if result[2] >= 10:
+        if not result:
             self.password.show()
         else:
+            self.newDrinkDialog.close()
             self.secondMenu()
 
     def checkPass(self):
@@ -107,6 +119,7 @@ class MainWindow(QMainWindow):
                     date = time.localtime(time.time())
                     appendData.write("<SIGNIN>%d-%d_%d:%d:%d\n\n" % (date[7], (date[0] % 100),
                                                                     date[3], date[4], date[5]))
+                    self.newDrinkDialog.close()
                     self.secondMenu()
                     self.password.close()
                     break
@@ -122,6 +135,7 @@ class MainWindow(QMainWindow):
     def checkEightHours(self, currentTime, pastTime):
         result = [0, 0, 0, 0, 0]
         leapYear = False
+        check = False
         sec = currentTime[4] - pastTime[4]
         if sec < 0:
             result[4] = 60 + sec
@@ -157,7 +171,10 @@ class MainWindow(QMainWindow):
 
         result[1] = currentTime[1] - pastTime[1]
 
-        return result
+        if result[2] <= 10 and result[1] == 0 and result[0] == 0:
+            check = True
+
+        return check
 
 
 
