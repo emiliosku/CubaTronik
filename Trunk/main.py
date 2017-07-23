@@ -48,6 +48,7 @@ class MainWindow(QMainWindow):
         self.data = loadData()
         self.password = SignInPassword()
         self.diy = Diy()
+        self.menu = Menu()
 
         """
             Menu Bar Configuration.
@@ -81,12 +82,15 @@ class MainWindow(QMainWindow):
         QObject.connect(self.password.pb_signIn, SIGNAL("clicked()"), self.checkPass)
         QObject.connect(self.second.pb_back, SIGNAL("clicked()"), self.firstMenu)
         QObject.connect(self.second.pb_diy, SIGNAL("clicked()"), self.diyMenu)
+        QObject.connect(self.second.pb_menu, SIGNAL("clicked()"), self.drinksMenu)
         QObject.connect(self.diy.pb_back, SIGNAL("clicked()"), self.secondMenu)
+        QObject.connect(self.menu.pb_back, SIGNAL("clicked()"), self.secondMenu)
         QObject.connect(self.newDrinkDialog.pb_guest, SIGNAL("clicked()"), self.data.loadMenu)
 
         self.central.addWidget(self.first)
         self.central.addWidget(self.second)
         self.central.addWidget(self.diy)
+        self.central.addWidget(self.menu)
 
     # SETTING UP OF THE SECOND MENU ON THE MAIN WIDGET.
     def secondMenu(self):
@@ -103,6 +107,9 @@ class MainWindow(QMainWindow):
         self.diy.list_extraTouch.setCurrentRow(-1)
         self.diy.level_alcohol.setValue(0)
         self.diy.setDefaultText()
+
+    def drinksMenu(self):
+        self.central.setCurrentWidget(self.menu)
 
     # SETTING UP OF THE FIRST MENU ON THE MAIN WIDGET.
     def firstMenu(self):

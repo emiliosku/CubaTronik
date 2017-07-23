@@ -10,6 +10,7 @@ from PyQt4.QtGui import *
 from gui.MenuOrDiy import *
 from gui.SignInPassword import *
 from gui.Diy import *
+from gui.Menu import *
 from loadFiles import *
 
 
@@ -122,7 +123,18 @@ class Diy(QWidget, Ui_DiyScreen):
             com1 = "None"
 
     # TODO: Function that parses the drink into a position on the machine in order to send a command. Using a dictionary
-# TODO: class with the menu.
+class Menu(QWidget, Ui_Menu):
+    def __init__(self, parent = None):
+        super(Menu, self).__init__(parent)
+        self.setupUi(self)
+        self.setButtonsIcons()
+
+    def setButtonsIcons(self):
+        bigIconSize = 64
+        self.pb_back.setIcon(QIcon(os.path.join("img", "arrow-back-icon.png")))
+        self.pb_back.setIconSize(QSize(bigIconSize, bigIconSize))
+        self.pb_create.setIcon(QIcon(os.path.join("img", "formula-icon.png")))
+        self.pb_create.setIconSize((QSize(bigIconSize, bigIconSize)))
 
 
 
