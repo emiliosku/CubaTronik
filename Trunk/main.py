@@ -3,6 +3,11 @@
     CubaTronik Project 2017
 """
 
+
+#==================
+##### IMPORTS #####
+#==================
+
 import re
 import sys
 import os
@@ -16,7 +21,13 @@ from loadFiles import *
 import logging
 import time
 
+# Logging feature configuratiion
 logging.basicConfig(format='%(levelname)s:%(message)s',level=logging.INFO)
+
+
+#======================
+##### MAIN WINDOW #####
+#======================
 
 class MainWindow(QMainWindow):
     def __init__(self, parent = None):
@@ -70,21 +81,34 @@ class MainWindow(QMainWindow):
         QObject.connect(self.password.pb_signIn, SIGNAL("clicked()"), self.checkPass)
         QObject.connect(self.second.pb_back, SIGNAL("clicked()"), self.firstMenu)
         QObject.connect(self.second.pb_diy, SIGNAL("clicked()"), self.diyMenu)
+        QObject.connect(self.diy.pb_back, SIGNAL("clicked()"), self.secondMenu)
+        QObject.connect(self.newDrinkDialog.pb_guest, SIGNAL("clicked()"), self.data.loadMenu)
 
         self.central.addWidget(self.first)
         self.central.addWidget(self.second)
         self.central.addWidget(self.diy)
 
+    # SETTING UP OF THE SECOND MENU ON THE MAIN WIDGET.
     def secondMenu(self):
         self.central.setCurrentWidget(self.second)
         self.second.label_userName.setText(self.currentUser)
 
+    # SETTING UPOF THE DIY MENU ON THE MAIN WIDGET.
     def diyMenu(self):
+        self.diy.clearLists()
+        self.diy.fillLists()
         self.central.setCurrentWidget(self.diy)
+        self.diy.list_booze.setCurrentRow(-1)
+        self.diy.list_soda.setCurrentRow(-1)
+        self.diy.list_extraTouch.setCurrentRow(-1)
+        self.diy.level_alcohol.setValue(0)
+        self.diy.setDefaultText()
 
+    # SETTING UP OF THE FIRST MENU ON THE MAIN WIDGET.
     def firstMenu(self):
         self.central.setCurrentWidget(self.first)
 
+    # POP UP OF THE PASSWORD DIALOG WHEN AUTHENTICATION IS NEEDED.
     def passwordDialog(self, userName):
         self.newDrinkDialog.list_usersAvailable.setItemSelected(userName, False)
         self.newDrinkDialog.list_usersAvailable.setCurrentRow(0, QItemSelectionModel.Deselect)
@@ -104,13 +128,16 @@ class MainWindow(QMainWindow):
                 currentTime = [date[7], (date[0] % 100), date[3], date[4], date[5]]
                 result = self.checkEightHours(currentTime, lastSignIn)
         if not result:
+            self.password.txt_pw.clear()
             self.password.show()
         else:
             self.newDrinkDialog.close()
             self.secondMenu()
 
+    # CHECK IF THE PASSWORD ENTERED CORRESPONDS WITH THE USER'S PASSWORD.
     def checkPass(self):
         pw = self.password.txt_pw.text()
+        self.password.txt_pw.clear()
         pattern = re.compile(r'<PASSWORD>(\w*)\n')
         for line in self.lines:
             if pattern.search(line):
@@ -132,6 +159,7 @@ class MainWindow(QMainWindow):
             else:
                 pass
 
+    # CHECK IF AUTHENTICATION IS NEEDED WHEN LOGINS ARE DONE BETWEEN 10 HOURS EACH OR NOT
     def checkEightHours(self, currentTime, pastTime):
         result = [0, 0, 0, 0, 0]
         leapYear = False
@@ -171,18 +199,15 @@ class MainWindow(QMainWindow):
 
         result[1] = currentTime[1] - pastTime[1]
 
-        if result[2] <= 10 and result[1] == 0 and result[0] == 0:
+        if result[2] < 10 and result[1] == 0 and result[0] == 0:
             check = True
 
         return check
 
 
-
-
-
-
-
-
+#=====================
+##### FIRST MENU #####
+#=====================
 
 class MainLayout(QWidget, Ui_MainLayout):
     def __init__(self, parent = None):
@@ -196,6 +221,10 @@ class MainLayout(QWidget, Ui_MainLayout):
         self.pb_newDrink.setIconSize(QSize(bigIconSize, bigIconSize))
 
 
+#===============================
+##### USER SELECTION DIAOG #####
+#===============================
+
 class NewDrinkDialog(QDialog, Ui_userSelectionDialog):
     def __init__(self, parent = None):
         super(NewDrinkDialog, self).__init__(parent)
@@ -203,7 +232,6 @@ class NewDrinkDialog(QDialog, Ui_userSelectionDialog):
         self.setButtonsIcons()
         self.newUser = NewUserDialog()
         self.load = loadData()
-        self.myThread = NewUserAdded()
         self.list = self.load.loadProfilePictures()
 
         QObject.connect(self.pb_cancel, SIGNAL("clicked()"), self.close)
@@ -220,6 +248,7 @@ class NewDrinkDialog(QDialog, Ui_userSelectionDialog):
     def popUpDialogCreate(self):
         self.newUser.show()
 
+    # THIS FUNCTION REFRESHES THE USER'S LIST AUTOMATICALLY WHEN A USER IS ADDED (THANKS TO NEW USER ADDED THREAD.
     def refreshUsers(self):
         mediumIconSize = 32
         self.list_usersAvailable.clear()

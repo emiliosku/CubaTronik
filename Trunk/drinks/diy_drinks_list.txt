@@ -1,0 +1,24 @@
+<BOOZE>Rhum
+<BOOZE>Whiskey
+<BOOZE>Vodka
+<BOOZE>Black Vodka
+<BOOZE>Gin
+<BOOZE>Licor 43
+<BOOZE>Tequila
+<BOOZE>Granadina
+<BOOZE>Jaggermeister
+<SODA>Lemon Soda
+<SODA>Orange Soda
+<SODA>RedBull
+<SODA>Coke
+<SODA>Orange Juice
+<SODA>Lemon Juice
+<SODA>Lime Juice
+<SODA>Strawberry Juice
+<SODA>Sprite
+<SODA>Tonic Water
+<SODA>Soda
+<EXTRA>Orange Juice
+<EXTRA>Lemon Juice
+<EXTRA>Lime Juice
+<EXTRA>Strawberry Juice
