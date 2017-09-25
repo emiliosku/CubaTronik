@@ -1,27 +1,29 @@
-Cuba libre;Posiblemente sea el combinado más famoso del mundo, es el resultado de mezclar en un vaso de tubo ron y coca
-cola añadiendole hielo y una rodaja de limón. El origen de esta mezcla es la guerra de Cuba, alla por el año
-1898, los cubanos querían independizarse de España y para ello contaban con la colaboración de ejército de
-los Estados Unidos. Los norteamericanos aportaron a la mezcla su coca cola y los cubanos hicieron lo mismo
-con su ron. Los soldados aliados brindaban con esta mezcla al grito de ¡¡¡Cuba libre!!! El nombre “cubata”
-tiene su origen en la costumbre de los españoles de derivar con el sufijo “-ata” palabras coloquiales, en
-este caso Cuba libre.**
+Cuba libre;Al terminar la Guerra de Cuba entre Estados Unidos y España, en la cual se libero a Cuba del dominio español, los soldados estadounidenses llevaron Coca-Cola a la isla donde la mezclaron con ron.
+Como Cuba habia sido liberada recientemente, llamaron a esta bebida Cubalibre.
 
-Destornillador;Esta mezcla lleva vodka y zumo de naranja, aunque hay una forma más común de tomarlo, que sería sustituir
-el zumo por un refresco de naranja, se le añade hielos y rodaja de naranja.El origen de esta mezcla tiene
-dos versiones muy diferentes, una de ellas data de mediados del siglo XX, cuando los obreros petroleros
-estadounidenses en el Oriente Medio la tomaban y utilizaban un destornillador para agitar la mezcla.
-De ahí que se conozca como “destornillador”.**
+Ingredientes:
+- Refresco de cola.
+- Ron blanco.**
 
-RAF;El RAF es ginebra con coca cola, hielo y una rodaja de limón.Su origen viene de la II Guerra Mundial, cuando los
-miembros de la Royal Air Force británica (R.A.F.) acostumbraban a tomar esta mezcla cuando regresaban del
-combate.**
+Destornillador;Los obreros petroleros estadounidenses en el Oriente Medio la tomaban y utilizaban un destornillador para agitar la mezcla.
+De ahi que se conozca como “destornillador”.
 
-Gin Tonic;Es una de las mezclas más populares del mundo, sus ingredientes son: ginebra, tónica, hielo y rodaja de limón.
-El origen del “gin tonic” es en la India, en el siglo XIX, cuando un oficial británico añade ginebra a la
-tónica con la intención de conseguir un combinado alcohólico para brindar  por las victorias de sus tropas
-en aquel país. Debido a las propiedades de la quinina, los soldados británicos destinados en la india
-combatían la malaria utilizando la corteza de quinina con agua y azúcar, y para mitigar el sabor amargo
-añadían ginebra, esta es otra versión del origen del “gin tonic”.**
+Ingredientes:
+- Refresco de Limón.
+- Vodka.**
+
+RAF;El R.A.F. debe su nombre a la Royal Air Force británica, cuyos miembros se aficionaron a esta bebida durante la segunda guerra mundial.
+
+Ingredientes:
+- Refresco de cola.
+- Ginebra.**
+
+Gin Tonic;El Gin Tonic surge por la proposicion de un alto oficial britanico de añadir ginebra a la tónica, para tener una bebida con la que celebrar las victorias de las tropas britanicas en la India.
+Esta proposicion fue motivada por el hecho de que la tónica contiene quinina que resulta un eficaz remedio contra la malaria.
+
+Ingredientes:
+- Tonic water.
+- Ginebra.**
 
 Torombolo;Versión del popular destornillador o vodka con limón en la que para acompañar al vodka este vez se utiliza
 Zumo de Piña, por aquello de las vitaminas. Lo que mola es su nombre y aunque le grites al camarero

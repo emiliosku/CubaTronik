@@ -8,6 +8,7 @@
 ##### IMPORTS #####
 #==================
 
+
 import re
 import sys
 import os
@@ -97,7 +98,7 @@ class MainWindow(QMainWindow):
         self.central.setCurrentWidget(self.second)
         self.second.label_userName.setText(self.currentUser)
 
-    # SETTING UPOF THE DIY MENU ON THE MAIN WIDGET.
+    # SETTING UP OF THE DIY MENU ON THE MAIN WIDGET.
     def diyMenu(self):
         self.diy.clearLists()
         self.diy.fillLists()
@@ -109,7 +110,12 @@ class MainWindow(QMainWindow):
         self.diy.setDefaultText()
 
     def drinksMenu(self):
+        self.menu.list_mixedDrinks.clear()
+        self.menu.fillMenuList()
         self.central.setCurrentWidget(self.menu)
+        self.menu.list_mixedDrinks.setCurrentRow(-1)
+        self.menu.setDefaultText()
+
 
     # SETTING UP OF THE FIRST MENU ON THE MAIN WIDGET.
     def firstMenu(self):

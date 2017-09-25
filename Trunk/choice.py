@@ -128,6 +128,9 @@ class Menu(QWidget, Ui_Menu):
         super(Menu, self).__init__(parent)
         self.setupUi(self)
         self.setButtonsIcons()
+        self.load = loadData()
+
+        QObject.connect(self.list_mixedDrinks, SIGNAL("currentTextChanged(QString)"), self.drinkSelected)
 
     def setButtonsIcons(self):
         bigIconSize = 64
@@ -136,5 +139,15 @@ class Menu(QWidget, Ui_Menu):
         self.pb_create.setIcon(QIcon(os.path.join("img", "formula-icon.png")))
         self.pb_create.setIconSize((QSize(bigIconSize, bigIconSize)))
 
+    def fillMenuList(self):
+        fullMenuList = self.load.loadMenu()
+        for item in fullMenuList.keys():
+            self.list_mixedDrinks.addItem(item)
 
+    def drinkSelected(self, item):
+        fullMenuList = self.load.loadMenu()
+        if not str(item) == "":
+            self.txt_description.setText(fullMenuList[str(item)])
 
+    def setDefaultText(self):
+        self.txt_description.setText("Choose a drink and read its description before it being prepared.")

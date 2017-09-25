@@ -73,7 +73,7 @@ class loadData():
 # TODO: function that reads a file (or creates it if it does not exist), where each bottle's position is stored.
     def loadMenu(self):
         # try:
-        chart = {"Drinks": "Description"}
+        chart = {}
         dir = os.path.join(os.getcwd(), "drinks\\menu.txt")
         with open(dir, "r") as data:
             menuMixes = data.read()
@@ -82,8 +82,7 @@ class loadData():
                 if mix != "":
                     actualMixes = mix.split(";")
                     drinks = actualMixes[0].replace("\n", "")
-                    explain = actualMixes[1]
-                    description = explain.replace("\n", "")
+                    description = actualMixes[1]
 
                     chart[str(drinks)] = str(description)
         # chart.keys() in order to know the drinks.
