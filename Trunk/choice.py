@@ -8,7 +8,6 @@ import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from gui.MenuOrDiy import *
-from gui.SignInPassword import *
 from gui.Diy import *
 from gui.Menu import *
 from loadFiles import *
@@ -29,13 +28,6 @@ class MenuOrDiy(QWidget,Ui_MenuOrDiy):
         self.pb_back.setIcon(QIcon(os.path.join("img", "arrow-back-icon.png")))
         self.pb_back.setIconSize(QSize(bigIconSize, bigIconSize))
 
-
-class SignInPassword(QDialog, Ui_TypePassword):
-    def __init__(self, parent = None):
-        super(SignInPassword, self).__init__(parent)
-        self.setupUi(self)
-
-        QObject.connect(self.pb_cancel, SIGNAL("clicked()"), self.close)
 
 
 class Diy(QWidget, Ui_DiyScreen):

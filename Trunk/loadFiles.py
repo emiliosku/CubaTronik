@@ -6,7 +6,7 @@
 import os
 import logging
 import re
-
+import time
 
 class loadData():
     def loadProfilePictures(self):
@@ -25,7 +25,8 @@ class loadData():
         fileName = dir + "\\log\\" + user + ".txt"
         with open(fileName, "w") as textFile:
             textFile.write("<USER>%s\n<PASSWORD>%s\n<PICTURE>%s\n"
-                           "=====================\n\n" %(user, password, picture))
+                           "=====================\n\n<SIGNIN>%d\n" %(user, password, picture, time.time()))
+
 
     def refreshData(self):
         try:
@@ -37,6 +38,7 @@ class loadData():
             return users
         except:
             logging.warning("Problem while loading users. Feature disabled")
+            return int("0")
 
     def loadDiyDrinks(self):
         try:

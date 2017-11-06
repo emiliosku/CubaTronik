@@ -14,13 +14,15 @@ import sys
 import os
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
-from gui.NewDrinkDialog import *
+from gui.NewDrinkDialogWidget import *
 from gui.MainLayout import *
 from gui.NewUserDialog import *
+from gui.SignInPassword import *
 from choice import *
 from loadFiles import *
 import logging
 import time
+
 
 # Logging feature configuratiion
 logging.basicConfig(format='%(levelname)s:%(message)s',level=logging.INFO)
@@ -42,12 +44,10 @@ class MainWindow(QMainWindow):
 
         self.first = MainLayout()
         self.second = MenuOrDiy()
-        self.newDrinkDialog = NewDrinkDialog()
-        self.newUserDialog = NewUserDialog()
-        self.myThread = NewUserAdded()
-        self.myThread.start()
-        self.data = loadData()
+        self.newDrinkDialog = NewDrinkDialogWidget()
+        self.newUserDialog = createNewUser()
         self.password = SignInPassword()
+        self.data = loadData()
         self.diy = Diy()
         self.menu = Menu()
 
@@ -75,13 +75,18 @@ class MainWindow(QMainWindow):
         """
             Signals' connections configuration.
         """
-        QObject.connect(self.first.pb_newDrink, SIGNAL("clicked()"), self.newDrinkDialog.show)
+        QObject.connect(self.first.pb_newDrink, SIGNAL("clicked()"), self.refreshUsers)
         QObject.connect(self.exitAction, SIGNAL("triggered()"), sys.exit)
-        QObject.connect(self.myThread, SIGNAL("newUser"), self.newDrinkDialog.refreshUsers)
         QObject.connect(self.newDrinkDialog.list_usersAvailable, SIGNAL("itemClicked(QListWidgetItem*)"),
                         self.passwordDialog)
+        QObject.connect(self.newDrinkDialog.pb_back, SIGNAL("clicked()"), self.toFirstMenu)
+        QObject.connect(self.newDrinkDialog.pb_newUser, SIGNAL("clicked()"), self.popupNewUser)
+        QObject.connect(self.newUserDialog.pb_cancel, SIGNAL("clicked()"), self.newUserDialog.close)
+        QObject.connect(self.newUserDialog.pb_create, SIGNAL("clicked()"), self.getUserBio)
+        QObject.connect(self.newDrinkDialog.pb_guest, SIGNAL("clicked()"), self.guestAccess)
+        QObject.connect(self.password.pb_cancel, SIGNAL("clicked()"), self.password.close)
         QObject.connect(self.password.pb_signIn, SIGNAL("clicked()"), self.checkPass)
-        QObject.connect(self.second.pb_back, SIGNAL("clicked()"), self.firstMenu)
+        QObject.connect(self.second.pb_back, SIGNAL("clicked()"), self.toUserChoiceMenu)
         QObject.connect(self.second.pb_diy, SIGNAL("clicked()"), self.diyMenu)
         QObject.connect(self.second.pb_menu, SIGNAL("clicked()"), self.drinksMenu)
         QObject.connect(self.diy.pb_back, SIGNAL("clicked()"), self.secondMenu)
@@ -92,6 +97,23 @@ class MainWindow(QMainWindow):
         self.central.addWidget(self.second)
         self.central.addWidget(self.diy)
         self.central.addWidget(self.menu)
+        self.central.addWidget(self.newDrinkDialog)
+
+
+    def toFirstMenu(self):
+        self.central.setCurrentWidget(self.first)
+
+    def toUserChoiceMenu(self):
+        self.refreshUsers()
+
+    def popupNewUser(self):
+        self.newUserDialog.show()
+
+    def guestAccess(self):
+        self.currentUser = "Guest"
+        self.secondMenu()
+
+
 
     # SETTING UP OF THE SECOND MENU ON THE MAIN WIDGET.
     def secondMenu(self):
@@ -121,6 +143,7 @@ class MainWindow(QMainWindow):
     def firstMenu(self):
         self.central.setCurrentWidget(self.first)
 
+
     # POP UP OF THE PASSWORD DIALOG WHEN AUTHENTICATION IS NEEDED.
     def passwordDialog(self, userName):
         self.newDrinkDialog.list_usersAvailable.setItemSelected(userName, False)
@@ -131,21 +154,61 @@ class MainWindow(QMainWindow):
         readData = open(self.directory, "r")
         self.lines = readData.readlines()
         readData.close()
-        pattern = re.compile(r'<SIGNIN>(\d*)-(\d*)_(\d*):(\d*):(\d*)')
+        pattern = re.compile(r'<SIGNIN>(\d*)')
         for line in self.lines:
             if pattern.search(line):
-                signIn = pattern.findall(line)[0]
-                lastSignIn = [int(signIn[0]), int(signIn[1]), int(signIn[2]),
-                              int(signIn[3]), int(signIn[4])]
-                date = time.localtime(time.time())
-                currentTime = [date[7], (date[0] % 100), date[3], date[4], date[5]]
-                result = self.checkEightHours(currentTime, lastSignIn)
+                signIn = int(pattern.findall(line)[0])
+                date = time.time()
+                result = self.checkEightHours(date, signIn)
         if not result:
             self.password.txt_pw.clear()
             self.password.show()
         else:
             self.newDrinkDialog.close()
             self.secondMenu()
+
+    def getUserBio(self):
+        name = self.newUserDialog.txt_newUserName.text()
+        password1 = self.newUserDialog.txt_newUserPassword.text()
+        password2 = self.newUserDialog.txt_newUserRepeatPassword.text()
+        picture = self.newUserDialog.list_profilePicture.currentRow()
+
+        if name == "":
+            # User Name missing.
+            QMessageBox.warning(self, "User Name Error","A user name is needed to create a new user.", QMessageBox.Ok)
+        else:
+            # User Name field filled in.
+            if password1 == "" or password2 == "":
+                # One or more password fields is empty.
+                QMessageBox.warning(self, "Password Error","One or more Password fields is empty. Check your Password.",
+                                    QMessageBox.Ok)
+            elif password1 != "" and password2 != "":
+                # Both password fields are filled.
+                if password1 != password2:
+                    # Both password fields are not equal.
+                    QMessageBox.warning(self, "Passwords don't match",
+                                        "The passwords you type do not match. Please, check your password",
+                                        QMessageBox.Ok)
+                else:
+                    # Both password fields are equal.
+                    if picture == 0:
+                        # Missing profile picture.
+                        QMessageBox.question(self, "Info", "A random profile picture will be assigned.\nAre you sure?",
+                                             QMessageBox.Yes | QMessageBox.Cancel)
+                    else:
+                        self.data.saveInfo(name, password1, picture)
+                        self.currentUser = name
+                        self.secondMenu()
+
+                        """
+                            Clean PopUp fields.
+                        """
+                        self.newUserDialog.txt_newUserName.clear()
+                        self.newUserDialog.txt_newUserPassword.clear()
+                        self.newUserDialog.txt_newUserRepeatPassword.clear()
+                        self.newUserDialog.list_profilePicture.clearSelection()
+
+                        self.newUserDialog.close()
 
     # CHECK IF THE PASSWORD ENTERED CORRESPONDS WITH THE USER'S PASSWORD.
     def checkPass(self):
@@ -156,9 +219,7 @@ class MainWindow(QMainWindow):
             if pattern.search(line):
                 if pw == pattern.findall(line)[0]:
                     appendData = open(self.directory, "a")
-                    date = time.localtime(time.time())
-                    appendData.write("<SIGNIN>%d-%d_%d:%d:%d\n\n" % (date[7], (date[0] % 100),
-                                                                    date[3], date[4], date[5]))
+                    appendData.write("<SIGNIN>%d\n\n" % (time.time()))
                     self.newDrinkDialog.close()
                     self.secondMenu()
                     self.password.close()
@@ -174,48 +235,15 @@ class MainWindow(QMainWindow):
 
     # CHECK IF AUTHENTICATION IS NEEDED WHEN LOGINS ARE DONE BETWEEN 10 HOURS EACH OR NOT
     def checkEightHours(self, currentTime, pastTime):
-        result = [0, 0, 0, 0, 0]
-        leapYear = False
-        check = False
-        sec = currentTime[4] - pastTime[4]
-        if sec < 0:
-            result[4] = 60 + sec
-            pastTime[3] = pastTime[3] + 1
-        elif sec > 0:
-            result[4] = sec
+        result = currentTime - pastTime
+        if result >= 36000:
+            return False
+        else:
+            return True
 
-        min = currentTime[3] - pastTime[3]
-        if min < 0:
-            result[3] = 60 + min
-            pastTime[2] = pastTime[2] + 1
-        elif min > 0:
-            result[3] = min
-
-        hours = currentTime[2] - pastTime[2]
-        if hours < 0:
-            result[2] = 24 + hours
-            pastTime[0] = pastTime[0] + 1
-        elif hours > 0:
-            result[2] = hours
-
-        if currentTime[1] % 400 == 0 or currentTime[1] % 4 == 0:
-            leapYear = True
-        days = currentTime[0] - pastTime[0]
-        if days < 0:
-            if leapYear:
-                result[0] = (366 - currentTime[0]) + pastTime[0]
-            else:
-                result[0] = (365 - currentTime[0]) + pastTime[0]
-            pastTime[1] = pastTime[1] + 1
-        elif days > 0:
-            result[0] = days
-
-        result[1] = currentTime[1] - pastTime[1]
-
-        if result[2] < 10 and result[1] == 0 and result[0] == 0:
-            check = True
-
-        return check
+    def refreshUsers(self):
+        self.newDrinkDialog.refreshUsers()
+        self.central.setCurrentWidget(self.newDrinkDialog)
 
 
 #=====================
@@ -234,21 +262,19 @@ class MainLayout(QWidget, Ui_MainLayout):
         self.pb_newDrink.setIconSize(QSize(bigIconSize, bigIconSize))
 
 
-#===============================
-##### USER SELECTION DIAOG #####
-#===============================
 
-class NewDrinkDialog(QDialog, Ui_userSelectionDialog):
+#=====================
+#####  NEW DRINK #####
+#=====================
+
+class NewDrinkDialogWidget(QWidget, Ui_userSelectionDialogWidget):
     def __init__(self, parent = None):
-        super(NewDrinkDialog, self).__init__(parent)
+        super(NewDrinkDialogWidget, self).__init__(parent)
         self.setupUi(self)
         self.setButtonsIcons()
-        self.newUser = NewUserDialog()
+
         self.load = loadData()
         self.list = self.load.loadProfilePictures()
-
-        QObject.connect(self.pb_cancel, SIGNAL("clicked()"), self.close)
-        QObject.connect(self.pb_newUser, SIGNAL("clicked()"), self.popUpDialogCreate)
 
     def setButtonsIcons(self):
         mediumIconSize = 32
@@ -257,11 +283,10 @@ class NewDrinkDialog(QDialog, Ui_userSelectionDialog):
         self.pb_newUser.setIconSize(QSize(bigIconSize, bigIconSize))
         self.pb_guest.setIcon(QIcon(os.path.join("img", "Barney-icon.png")))
         self.pb_guest.setIconSize(QSize(mediumIconSize, mediumIconSize))
+        self.pb_back.setIcon(QIcon(os.path.join("img", "arrow-back-icon.png")))
+        self.pb_back.setIconSize(QSize(bigIconSize, bigIconSize))
 
-    def popUpDialogCreate(self):
-        self.newUser.show()
-
-    # THIS FUNCTION REFRESHES THE USER'S LIST AUTOMATICALLY WHEN A USER IS ADDED (THANKS TO NEW USER ADDED THREAD.
+    # THIS FUNCTION REFRESHES THE USER'S LIST.
     def refreshUsers(self):
         mediumIconSize = 32
         self.list_usersAvailable.clear()
@@ -282,12 +307,14 @@ class NewDrinkDialog(QDialog, Ui_userSelectionDialog):
         self.list_usersAvailable.show()
 
 
-class NewUserDialog(QDialog, Ui_NewUserDialog):
+#=====================
+#####  NEW USER  #####
+#=====================
+
+class createNewUser(QDialog, Ui_NewUserDialog):
     def __init__(self, parent = None):
-        super(NewUserDialog, self).__init__(parent)
+        super(createNewUser, self).__init__(parent)
         self.setupUi(self)
-        QObject.connect(self.pb_cancel, SIGNAL("clicked()"), self.close)
-        QObject.connect(self.pb_create, SIGNAL("clicked()"), self.getUserBio)
 
         """
             Filling in the profile picture QListWidget
@@ -306,71 +333,18 @@ class NewUserDialog(QDialog, Ui_NewUserDialog):
             self.list_profilePicture.addItem(item)
         self.list_profilePicture.show()
 
-    def getUserBio(self):
-        name = self.txt_newUserName.text()
-        password1 = self.txt_newUserPassword.text()
-        password2 = self.txt_newUserRepeatPassword.text()
-        picture = self.list_profilePicture.currentRow()
-        if name == "":
-            # User Name missing.
-            self.missingName()
-        else:
-            # User Name field filled in.
-            if password1 == "" or password2 == "":
-                # One or more password fields is empty.
-                self.missingPassword()
-            elif password1 != "" and password2 != "":
-                # Both password fields are filled.
-                if password1 != password2:
-                    # Both password fields are not equal.
-                    self.matchingPasswords()
-                else:
-                    # Both password fields are equal.
-                    if picture == 0:
-                        # Missing profile picture.
-                        self.missingProfilePicture()
-                    else:
-                        self.load.saveInfo(name, password1, picture)
-                        self.close()
 
-    def missingName(self):
-        self.nameAlert = QMessageBox.warning(self, "User Name Error", "A user name is needed to create a new user.", QMessageBox.Ok)
-
-    def missingProfilePicture(self):
-        self.pictureAlert = QMessageBox.question(self, "Info", "A random profile picture will be assigned.\nAre you sure?",
-                                                 QMessageBox.Yes | QMessageBox.Cancel)
-
-    def missingPassword(self):
-        self.passAlert = QMessageBox.warning(self, "Password Error", "One or more Password fields is empty. Check your Password.",
-                                             QMessageBox.Ok)
-
-    def matchingPasswords(self):
-        self.matchPass = QMessageBox.warning(self, "Passwords don't match", "The passwords you type do not match. Please, check your password",
-                                             QMessageBox.Ok)
-
-
-class NewUserAdded(QThread):
-    def __init__(self):
-        QThread.__init__(self)
-        self.usersNumber = 0
-        self.load = loadData()
-
-    def __del__(self):
-        self.wait()
-
-    def run(self):
-        while 1:
-            time.sleep(0.5)
-            if self.usersNumber != len(self.load.refreshData()):
-                self.usersNumber = len(self.load.refreshData())
-                self.emit(SIGNAL("newUser"))
+class SignInPassword(QDialog, Ui_TypePassword):
+    def __init__(self, parent = None):
+        super(SignInPassword, self).__init__(parent)
+        self.setupUi(self)
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.processEvents()
     main = MainWindow()
-    main.resize(700, 500)
+    main.resize(1024, 600)
     main.setWindowTitle("CubaTronik Project")
     main.show()
     app.setWindowIcon(QIcon(os.path.join("img", "beer-icon.png")))

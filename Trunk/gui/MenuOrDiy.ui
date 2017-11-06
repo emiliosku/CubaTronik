@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>314</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -40,7 +40,7 @@
        <property name="font">
         <font>
          <family>Single Sleeve</family>
-         <pointsize>20</pointsize>
+         <pointsize>36</pointsize>
         </font>
        </property>
        <property name="text">
@@ -59,7 +59,7 @@
        <property name="font">
         <font>
          <family>Single Sleeve</family>
-         <pointsize>28</pointsize>
+         <pointsize>48</pointsize>
         </font>
        </property>
        <property name="text">
@@ -108,7 +108,7 @@
        <property name="font">
         <font>
          <family>Single Sleeve</family>
-         <pointsize>36</pointsize>
+         <pointsize>48</pointsize>
         </font>
        </property>
        <property name="text">
@@ -127,7 +127,7 @@
        <property name="font">
         <font>
          <family>Single Sleeve</family>
-         <pointsize>36</pointsize>
+         <pointsize>48</pointsize>
         </font>
        </property>
        <property name="text">
@@ -170,8 +170,14 @@
      </item>
      <item>
       <widget class="QPushButton" name="pb_back">
+       <property name="font">
+        <font>
+         <family>Single Sleeve</family>
+         <pointsize>48</pointsize>
+        </font>
+       </property>
        <property name="text">
-        <string/>
+        <string>Back</string>
        </property>
       </widget>
      </item>

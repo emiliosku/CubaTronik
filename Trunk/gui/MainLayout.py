@@ -36,7 +36,7 @@ class Ui_MainLayout(object):
         self.pb_newDrink.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Single Sleeve"))
-        font.setPointSize(36)
+        font.setPointSize(48)
         self.pb_newDrink.setFont(font)
         self.pb_newDrink.setObjectName(_fromUtf8("pb_newDrink"))
         self.horizontalLayout.addWidget(self.pb_newDrink)
