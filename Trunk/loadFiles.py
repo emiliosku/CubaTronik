@@ -14,7 +14,7 @@ class loadData():
             self.files = []
             for file in os.listdir("./profiles"):
                 if file.endswith(".png"):
-                    self.files.append(os.path.join(os.getcwd(), "profiles\\" + file))
+                    self.files.append(os.path.join(os.getcwd(), "profiles/" + file))
             logging.debug("Profile pictures loaded successfully.")
             return self.files
         except:
@@ -22,7 +22,7 @@ class loadData():
 
     def saveInfo(self, user, password, picture):
         dir = os.getcwd()
-        fileName = dir + "\\log\\" + user + ".txt"
+        fileName = dir + "/log/" + user + ".txt"
         with open(fileName, "w") as textFile:
             textFile.write("<USER>%s\n<PASSWORD>%s\n<PICTURE>%s\n"
                            "=====================\n\n<SIGNIN>%d\n" %(user, password, picture, time.time()))
@@ -33,7 +33,7 @@ class loadData():
             users = []
             for user in os.listdir("./log"):
                 if user.endswith(".txt"):
-                    users.append(os.path.join(os.getcwd(), "log\\" + user))
+                    users.append(os.path.join(os.getcwd(), "log/" + user))
             logging.debug("Users refreshed successfully,")
             return users
         except:
@@ -45,7 +45,7 @@ class loadData():
             booze = []
             soda = []
             extraTouch = []
-            dir = os.path.join(os.getcwd(), "drinks\\diy_drinks_list.txt")
+            dir = os.path.join(os.getcwd(), "drinks/diy_drinks_list.txt")
             with open(dir, "r") as data:
                 self.drinks = data.readlines()
             boozeString = re.compile(r'<BOOZE>(\w+)\n')
@@ -76,7 +76,7 @@ class loadData():
     def loadMenu(self):
         # try:
         chart = {}
-        dir = os.path.join(os.getcwd(), "drinks\\menu.txt")
+        dir = os.path.join(os.getcwd(), "drinks/menu.txt")
         with open(dir, "r") as data:
             menuMixes = data.read()
             mixes = menuMixes.split("**")

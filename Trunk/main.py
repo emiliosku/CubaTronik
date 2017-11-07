@@ -9,11 +9,6 @@
 #==================
 
 
-import re
-import sys
-import os
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
 from gui.NewDrinkDialogWidget import *
 from gui.MainLayout import *
 from gui.NewUserDialog import *
