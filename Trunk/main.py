@@ -13,10 +13,14 @@ from gui.NewDrinkDialogWidget import *
 from gui.MainLayout import *
 from gui.NewUserDialog import *
 from gui.SignInPassword import *
+from gui.AdminPassword import *
+from gui.Blank import *
 from choice import *
+from admin import *
 from loadFiles import *
 import logging
 import time
+import random
 
 
 # Logging feature configuratiion
@@ -26,7 +30,7 @@ logging.basicConfig(format='%(levelname)s:%(message)s',level=logging.INFO)
 #======================
 ##### MAIN WINDOW #####
 #======================
-
+#TODO: organize all the methods used on the sketch!!
 class MainWindow(QMainWindow):
     def __init__(self, parent = None):
         super(MainWindow,self).__init__(parent)
@@ -42,9 +46,14 @@ class MainWindow(QMainWindow):
         self.newDrinkDialog = NewDrinkDialogWidget()
         self.newUserDialog = createNewUser()
         self.password = SignInPassword()
+        self.adminPassword = AdminPassword()
         self.data = loadData()
         self.diy = Diy()
         self.menu = Menu()
+        self.adminMenu = AdminMode()
+        self.positioning = Positioning()
+        self.bottleName = BottleName()
+        self.blank = Blank()
 
         """
             Menu Bar Configuration.
@@ -53,27 +62,42 @@ class MainWindow(QMainWindow):
         self.exitAction = QAction("Exit", self)
         self.allTimeStatsAction = QAction("All Time Statistics", self)
         self.monthStatsAction = QAction("Month Statistics", self)
+        self.editUserAction = QAction("Edit users", self)
+        self.eraseUserAction = QAction("Erase users", self)
         self.statusBar()
-        mainMenu = self.menuBar()
+        self.mainMenu = self.menuBar()
 
         # Configuring the Program menu.
-        programMenu = mainMenu.addMenu("&Program")
+        programMenu = self.mainMenu.addMenu("&Program")
         programMenu.addAction(self.adminAction)
         programMenu.addSeparator()
         programMenu.addAction(self.exitAction)
 
         # Configuring the Statistics menu
-        statsMenu = mainMenu.addMenu("&Statistics")
+        statsMenu = self.mainMenu.addMenu("&Statistics")
         statsMenu.addAction(self.monthStatsAction)
         statsMenu.addAction(self.allTimeStatsAction)
+
+        # Configuring the Users menu.
+        userMenu = self.mainMenu.addMenu("&Users")
+        userMenu.addAction(self.editUserAction)
+        userMenu.addAction(self.eraseUserAction)
 
         """
             Signals' connections configuration.
         """
         QObject.connect(self.first.pb_newDrink, SIGNAL("clicked()"), self.refreshUsers)
         QObject.connect(self.exitAction, SIGNAL("triggered()"), sys.exit)
+        QObject.connect(self.adminAction, SIGNAL("triggered()"), self.adminPassword.show)
+        QObject.connect(self.adminPassword.pb_check, SIGNAL("clicked()"), self.checkAdminPass)
+        QObject.connect(self.adminPassword.pb_cancel, SIGNAL("clicked()"), self.closeAdminPopUp)
+        QObject.connect(self.bottleName.pb_continue, SIGNAL("clicked()"), self.adminPositioning)
         QObject.connect(self.newDrinkDialog.list_usersAvailable, SIGNAL("itemClicked(QListWidgetItem*)"),
                         self.passwordDialog)
+        QObject.connect(self.adminMenu.pb_exit, SIGNAL("clicked()"), self.toFirstMenu)
+        QObject.connect(self.adminMenu.pb_bottlePositioning, SIGNAL("clicked()"), self.bottleNameDialog)
+        QObject.connect(self.blank.movie, SIGNAL("finished()"), self.closeBlank)
+        QObject.connect(self.positioning.pb_exit, SIGNAL("clicked()"), self.toAdminMenu)
         QObject.connect(self.newDrinkDialog.pb_back, SIGNAL("clicked()"), self.toFirstMenu)
         QObject.connect(self.newDrinkDialog.pb_newUser, SIGNAL("clicked()"), self.popupNewUser)
         QObject.connect(self.newUserDialog.pb_cancel, SIGNAL("clicked()"), self.newUserDialog.close)
@@ -93,20 +117,76 @@ class MainWindow(QMainWindow):
         self.central.addWidget(self.diy)
         self.central.addWidget(self.menu)
         self.central.addWidget(self.newDrinkDialog)
+        self.central.addWidget(self.adminMenu)
+        self.central.addWidget(self.positioning)
 
 
     def toFirstMenu(self):
+        if self.mainMenu.isHidden():
+            self.mainMenu.show()
         self.central.setCurrentWidget(self.first)
 
     def toUserChoiceMenu(self):
         self.refreshUsers()
 
+    def toAdminMenu(self):
+        self.central.setCurrentWidget(self.adminMenu)
+
     def popupNewUser(self):
         self.newUserDialog.show()
+        self.newUserDialog.list_profilePicture.setCurrentRow(0, QItemSelectionModel.Deselect)
+        self.newUserDialog.list_profilePicture.setCurrentRow(-1)
 
     def guestAccess(self):
         self.currentUser = "Guest"
         self.secondMenu()
+
+    def checkAdminPass(self):
+        password = self.adminPassword.txt_password.text()
+        if password == "admin1234":
+            self.mainMenu.hide()
+            self.central.setCurrentWidget(self.adminMenu)
+            self.adminPassword.txt_password.clear()
+            self.adminPassword.close()
+        elif password == "69beicon69":
+            dir = os.path.join(os.getcwd(), "log/tenor.gif")
+            self.blank.label_gif.setMovie(self.blank.movie)
+            self.blank.show()
+            self.blank.movie.start()
+            self.adminPassword.txt_password.clear()
+        else:
+            QMessageBox.warning(self, "Wrong Password", "The password does not match. Please, type a valid password",
+                                QMessageBox.Ok)
+
+    def closeBlank(self):
+        self.blank.movie.stop()
+        self.blank.close()
+        QMessageBox.information(self, "Easter Egg", "Be proud of yourself, you have found an easter egg!",
+                                QMessageBox.Close)
+
+    def closeAdminPopUp(self):
+        self.adminPassword.txt_password.clear()
+        self.adminPassword.close()
+
+    def adminPositioning(self):
+        bottle = self.bottleName.txt_bottleName.text()
+        if not bottle == "":
+            choice = QMessageBox.question(self, "Check bottle name",
+                                          "Are you sure that \"%s\" is the bottle you want to register?" %bottle,
+                                          QMessageBox.Yes|QMessageBox.No)
+            if choice == QMessageBox.Yes:
+                self.bottleName.txt_bottleName.clear()
+                self.bottleName.close()
+                self.positioning.label_bottleName.setText(bottle)
+                self.central.setCurrentWidget(self.positioning)
+        else:
+            QMessageBox.warning(self, "No bottle name", "A name is needed in order to position a bottle.",
+                                QMessageBox.Ok)
+
+    def bottleNameDialog(self):
+        self.bottleName.show()
+
+
 
 
 
@@ -145,7 +225,7 @@ class MainWindow(QMainWindow):
         self.newDrinkDialog.list_usersAvailable.setCurrentRow(0, QItemSelectionModel.Deselect)
         result = False
         self.currentUser = str(userName.text())
-        self.directory = "%s\\log\\%s.txt" % (os.getcwd(), self.currentUser)
+        self.directory = "%s/log/%s.txt" % (os.getcwd(), self.currentUser)
         readData = open(self.directory, "r")
         self.lines = readData.readlines()
         readData.close()
@@ -172,6 +252,7 @@ class MainWindow(QMainWindow):
             # User Name missing.
             QMessageBox.warning(self, "User Name Error","A user name is needed to create a new user.", QMessageBox.Ok)
         else:
+            #TODO: check if the user name exists or not.
             # User Name field filled in.
             if password1 == "" or password2 == "":
                 # One or more password fields is empty.
@@ -186,24 +267,39 @@ class MainWindow(QMainWindow):
                                         QMessageBox.Ok)
                 else:
                     # Both password fields are equal.
-                    if picture == 0:
+                    if picture == -1:
                         # Missing profile picture.
-                        QMessageBox.question(self, "Info", "A random profile picture will be assigned.\nAre you sure?",
+                        choice = QMessageBox.question(self, "Info", "A random profile picture will be assigned.\nAre you sure?",
                                              QMessageBox.Yes | QMessageBox.Cancel)
+                        if choice == QMessageBox.Yes:
+                            picture = random.randint(0, self.newUserDialog.pictures)
+                            self.data.saveInfo(name, password1, picture)
+                            self.currentUser = name
+                            self.secondMenu()
+                            self.cleanUpFields()
+
+                            self.newUserDialog.close()
+                        else:
+                            pass
                     else:
                         self.data.saveInfo(name, password1, picture)
                         self.currentUser = name
                         self.secondMenu()
-
-                        """
-                            Clean PopUp fields.
-                        """
-                        self.newUserDialog.txt_newUserName.clear()
-                        self.newUserDialog.txt_newUserPassword.clear()
-                        self.newUserDialog.txt_newUserRepeatPassword.clear()
-                        self.newUserDialog.list_profilePicture.clearSelection()
+                        self.cleanUpFields()
 
                         self.newUserDialog.close()
+
+
+    def cleanUpFields(self):
+        """
+            Clean PopUp fields.
+        """
+        self.newUserDialog.txt_newUserName.clear()
+        self.newUserDialog.txt_newUserPassword.clear()
+        self.newUserDialog.txt_newUserRepeatPassword.clear()
+        self.newUserDialog.list_profilePicture.clearSelection()
+
+
 
     # CHECK IF THE PASSWORD ENTERED CORRESPONDS WITH THE USER'S PASSWORD.
     def checkPass(self):
@@ -310,22 +406,20 @@ class createNewUser(QDialog, Ui_NewUserDialog):
     def __init__(self, parent = None):
         super(createNewUser, self).__init__(parent)
         self.setupUi(self)
+        self.pictures = 0
 
         """
             Filling in the profile picture QListWidget
         """
         self.list_profilePicture.setViewMode(QtGui.QListView.IconMode)
         self.load = loadData()
-        self.randomText = True
         for x in self.load.loadProfilePictures():
             icon = QIcon()
             icon.addPixmap(QPixmap(QString.fromUtf8(str(x))), QIcon.Normal, QIcon.On)
-            if self.randomText:
-                item = QListWidgetItem(icon, "Random")
-                self.randomText = False
-            else:
-                item = QListWidgetItem(icon, "")
+            item = QListWidgetItem(icon, "")
             self.list_profilePicture.addItem(item)
+            self.pictures += 1
+        #TODO: save the number of pictures on a file for updating purposes.
         self.list_profilePicture.show()
 
 
@@ -333,6 +427,18 @@ class SignInPassword(QDialog, Ui_TypePassword):
     def __init__(self, parent = None):
         super(SignInPassword, self).__init__(parent)
         self.setupUi(self)
+
+class AdminPassword(QDialog, Ui_AdminPass):
+    def __init__(self, parent = None):
+        super(AdminPassword, self).__init__(parent)
+        self.setupUi(self)
+
+class Blank(QDialog, Ui_EasterEgg):
+    def __init__(self, parent = None):
+        super(Blank, self).__init__(parent)
+        self.setupUi(self)
+
+        self.movie = QMovie(os.path.join(os.getcwd(), "log/tenor.gif"))
 
 
 if __name__ == "__main__":
